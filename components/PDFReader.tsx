@@ -4,11 +4,8 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 
-// Usar webpack para bundlear el worker correctamente (react-pdf v9 + Next.js 14)
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url,
-).toString();
+// Worker local: versión 4.8.69 (debe coincidir con react-pdf/node_modules/pdfjs-dist)
+pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
 interface Props {
   currentPage: number;
