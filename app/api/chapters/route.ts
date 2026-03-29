@@ -73,10 +73,23 @@ async function extractChaptersFromPDF(buffer: Buffer): Promise<Chapter[]> {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const pdfPath = path.join(process.cwd(), "public", "book.pdf");
-    const buffer = await readFile(pdfPath);
+    // Intentar primero con el filesystem (local dev)
+    let buffer: Buffer;
+    try {
+      const pdfPath = path.join(process.cwd(), "public", "book.pdf");
+      buffer = await readFile(pdfPath);
+    } catch {
+      // Fallback: fetch desde la URL estática (Vercel production)
+      const baseUrl = process.env.NEXTAUTH_URL ||
+        (request.headers.get("host") ? `https://${request.headers.get("host")}` : "http://localhost:3000");
+      const pdfUrl = `${baseUrl}/book.pdf`;
+      const res = await fetch(pdfUrl);
+      if (!res.ok) throw new Error("PDF no accesible");
+      const arrayBuffer = await res.arrayBuffer();
+      buffer = Buffer.from(arrayBuffer);
+    }
     const chapters = await extractChaptersFromPDF(buffer);
     return NextResponse.json({ chapters, total: chapters.length });
   } catch {
