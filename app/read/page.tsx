@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import Header from "@/components/Header";
@@ -9,7 +9,7 @@ import { Chapter } from "@/app/api/chapters/route";
 // Carga dinámica para evitar errores de SSR con react-pdf
 const PDFReader = dynamic(() => import("@/components/PDFReader"), { ssr: false });
 
-export default function ReadPage() {
+function ReadPageContent() {
   const searchParams = useSearchParams();
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -130,5 +130,13 @@ export default function ReadPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function ReadPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#0d0d1a] flex items-center justify-center text-white">Cargando...</div>}>
+      <ReadPageContent />
+    </Suspense>
   );
 }
