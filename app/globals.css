@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #0d0d1a;
+  color: #e2e8f0;
+  font-family: 'Georgia', serif;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+::-webkit-scrollbar-thumb {
+  background: #e94560;
+  border-radius: 3px;
+}
+
+/* React PDF */
+.react-pdf__Page__canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+.react-pdf__Page {
+  display: flex;
+  justify-content: center;
+}
